@@ -38,12 +38,14 @@ target**.
 
 Released — `go get github.com/go-asmgen/asmgen@latest` (latest **v0.2.0**).
 
-All four 64-bit targets, ABI0: scalars (signed/unsigned ints 1/2/4/8 bytes,
-pointers, 32/64-bit floats), struct/slice/string aggregates, fixed-size arrays
-passed by value, and SIMD on every target via the `Raw` escape hatch — SSE2
-(amd64), NEON (arm64), RVV (riscv64), LSX (loong64), all runtime-proven. Each
-architecture differs only in its move table. First-class vector *types* in the
-typed surface are the main remaining roadmap item.
+All four 64-bit targets, ABI0, at functional parity — each with the same set of
+runtime-proven examples: scalars (signed/unsigned ints 1/2/4/8 bytes, pointers,
+32/64-bit floats), struct/slice/string aggregates, fixed-size arrays by value,
+stack frames + arbitrary TEXT flags (`NewFuncFlags`), and SIMD via the `Raw`
+escape hatch — **SSE2 + AVX2** (amd64), **NEON** (arm64), **RVV** (riscv64),
+**LSX + LASX** (loong64), up to 256-bit. Each architecture differs only in its
+move table. A typed vector helper and first-class vector *types* are the main
+remaining items.
 
 ## Links
 
