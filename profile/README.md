@@ -2,21 +2,22 @@
 
 🌐 **[Website](https://go-asmgen.github.io)** · 📚 **[Documentation](https://go-asmgen.github.io/docs/)**
 
-**Ergonomic generation of Go-compatible Plan 9 assembly for non-amd64
-architectures** — the multi-architecture counterpart to what [`avo`][avo] does
-for amd64.
+**Ergonomic generation of Go-compatible Plan 9 assembly for every 64-bit Go
+target** — amd64, arm64, riscv64 and loong64.
 
-`avo` encodes instruction bytes itself, which is exactly what makes extending it
-to new ISAs expensive. go-asmgen instead **emits Plan 9 assembly text and lets
-the Go toolchain assembler (`cmd/asm`) encode it**, so each new architecture
-only needs an ABI layout model plus a thin instruction-emit surface — not a
-byte-level encoder.
+[`avo`][avo] does this for amd64 by encoding instruction bytes itself — powerful,
+but exactly what makes extending it to new ISAs expensive. go-asmgen instead
+**emits Plan 9 assembly text and lets the Go toolchain assembler (`cmd/asm`)
+encode it**, so each architecture is just a thin move/register surface over a
+shared ABI0 layout model — not a byte-level encoder. avo stays the richer choice
+for amd64-specific work; go-asmgen's niche is **one uniform builder across every
+target**.
 
 ## Repositories
 
 | Repo | What it is |
 |------|------------|
-| [**asmgen**](https://github.com/go-asmgen/asmgen) | the library: ABI0 layout models + Plan 9 emit, starting with arm64 |
+| [**asmgen**](https://github.com/go-asmgen/asmgen) | the library: shared ABI0 layout (`abi`) + per-arch builders (`amd64`/`arm64`/`riscv64`/`loong64`) + Plan 9 writer (`emit`) |
 | [**docs**](https://github.com/go-asmgen/docs) | MkDocs Material documentation, served at [/docs/](https://go-asmgen.github.io/docs/) |
 | [**go-asmgen.github.io**](https://github.com/go-asmgen/go-asmgen.github.io) | the Hugo landing page |
 
@@ -29,16 +30,16 @@ byte-level encoder.
   stable contract hand-written `.s` targets; ABIInternal can change between Go
   releases.
 - **Verified by `go vet` asmdecl.** Every emitted `name+offset(FP)` is
-  cross-checked against the Go declaration in CI — the cheapest, strongest
-  correctness check — and exercised by a runtime test on native arm64.
+  cross-checked against the Go declaration in CI, and exercised by a runtime
+  test — natively on amd64 and arm64, under qemu-user for riscv64 and loong64.
 - **100% test coverage** of the library, enforced as a CI gate on every repository.
 
 ## Status
 
-v0 — proof of pipeline: arm64, ABI0, 8-byte int/ptr arguments and results.
-Widening type support (sub-word ints, floats, alignment/padding) and additional
-ISAs (riscv64, loong64) are on the roadmap; each new case is checked against
-asmdecl.
+All four 64-bit targets, ABI0: scalars (signed/unsigned ints 1/2/4/8 bytes,
+pointers, 32/64-bit floats), struct/slice/string aggregates, and SSE/NEON SIMD
+(via the `Raw` escape hatch). Each architecture differs only in its move table.
+First-class vector types and array value args are the remaining roadmap items.
 
 ## Links
 
