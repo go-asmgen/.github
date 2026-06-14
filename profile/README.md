@@ -3,7 +3,8 @@
 🌐 **[Website](https://go-asmgen.github.io)** · 📚 **[Documentation](https://go-asmgen.github.io/docs/)**
 
 **Ergonomic generation of Go-compatible Plan 9 assembly for every 64-bit Go
-target** — amd64, arm64, riscv64 and loong64.
+target** — amd64, arm64, riscv64, loong64, ppc64le (VSX) and s390x (vector
+facility, big-endian).
 
 [`avo`][avo] does this for amd64 by encoding instruction bytes itself — powerful,
 but exactly what makes extending it to new ISAs expensive. go-asmgen instead
@@ -17,7 +18,7 @@ target**.
 
 | Repo | What it is |
 |------|------------|
-| [**asmgen**](https://github.com/go-asmgen/asmgen) | the library: shared ABI0 layout (`abi`) + per-arch builders (`amd64`/`arm64`/`riscv64`/`loong64`) + Plan 9 writer (`emit`) |
+| [**asmgen**](https://github.com/go-asmgen/asmgen) | the library: shared ABI0 layout (`abi`) + per-arch builders (`amd64`/`arm64`/`riscv64`/`loong64`/`ppc64le`/`s390x`) + Plan 9 writer (`emit`) |
 | [**docs**](https://github.com/go-asmgen/docs) | MkDocs Material documentation, served at [/docs/](https://go-asmgen.github.io/docs/) |
 | [**go-asmgen.github.io**](https://github.com/go-asmgen/go-asmgen.github.io) | the Hugo landing page |
 
@@ -31,21 +32,22 @@ target**.
   releases.
 - **Verified by `go vet` asmdecl.** Every emitted `name+offset(FP)` is
   cross-checked against the Go declaration in CI, and exercised by a runtime
-  test — natively on amd64 and arm64, under qemu-user for riscv64 and loong64.
+  test — natively on amd64 and arm64, under qemu-user for riscv64, loong64,
+  ppc64le and s390x (the s390x job exercising the big-endian path).
 - **100% test coverage** of the library, enforced as a CI gate on every repository.
 
 ## Status
 
-Released — `go get github.com/go-asmgen/asmgen@latest` (latest **v0.2.0**).
+Released — `go get github.com/go-asmgen/asmgen@latest` (latest **v0.5.0**).
 
-All four 64-bit targets, ABI0, at functional parity — each with the same set of
+All six 64-bit targets, ABI0, at functional parity — each with the same set of
 runtime-proven examples: scalars (signed/unsigned ints 1/2/4/8 bytes, pointers,
 32/64-bit floats), struct/slice/string aggregates, fixed-size arrays by value,
 stack frames + arbitrary TEXT flags (`NewFuncFlags`), and SIMD via the `Raw`
 escape hatch — **SSE2 + AVX2** (amd64), **NEON** (arm64), **RVV** (riscv64),
-**LSX + LASX** (loong64), up to 256-bit. Each architecture differs only in its
-move table. A typed vector helper and first-class vector *types* are the main
-remaining items.
+**LSX + LASX** (loong64), **VSX** (ppc64le), **vector facility** (s390x,
+big-endian), up to 256-bit. Each architecture differs only in its move table. A
+typed vector helper and first-class vector *types* are the main remaining items.
 
 ## Links
 
