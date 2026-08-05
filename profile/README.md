@@ -23,6 +23,7 @@ target**.
 | [**asmgen**](https://github.com/go-asmgen/asmgen) | the library: shared ABI0 layout (`abi`) + per-arch builders (`amd64`/`arm64`/`riscv64`/`loong64`/`ppc64le`/`s390x`) + Plan 9 writer (`emit`) |
 | [**docs**](https://github.com/go-asmgen/docs) | MkDocs Material documentation, served at [/docs/](https://go-asmgen.github.io/docs/) |
 | [**go-asmgen.github.io**](https://github.com/go-asmgen/go-asmgen.github.io) | the Hugo landing page |
+| [**brand**](https://github.com/go-asmgen/brand) | brand assets — logos & icons |
 
 ## Principles
 
@@ -40,16 +41,19 @@ target**.
 
 ## Status
 
-Released — `go get github.com/go-asmgen/asmgen@latest` (latest **v0.5.0**).
+Released — `go get github.com/go-asmgen/asmgen@latest` (latest **v0.8.0**).
 
-All six 64-bit targets, ABI0, at functional parity — each with the same set of
-runtime-proven examples: scalars (signed/unsigned ints 1/2/4/8 bytes, pointers,
-32/64-bit floats), struct/slice/string aggregates, fixed-size arrays by value,
-stack frames + arbitrary TEXT flags (`NewFuncFlags`), and SIMD via the `Raw`
-escape hatch — **SSE2 + AVX2** (amd64), **NEON** (arm64), **RVV** (riscv64),
-**LSX + LASX** (loong64), **VSX** (ppc64le), **vector facility** (s390x,
-big-endian), up to 256-bit. Each architecture differs only in its move table. A
-typed vector helper and first-class vector *types* are the main remaining items.
+All six 64-bit targets, ABI0, at functional parity for scalars (signed/unsigned
+ints 1/2/4/8 bytes, pointers, 32/64-bit floats), stack frames + arbitrary TEXT
+flags (`NewFuncFlags`), and SIMD via the `Raw` escape hatch — **SSE2 + AVX2**
+(amd64), **NEON** (arm64), **RVV** (riscv64), **LSX + LASX** (loong64), **VSX**
+(ppc64le), **vector facility** (s390x, big-endian), up to 256-bit.
+Struct/slice/string aggregates and fixed-size arrays by value are proven
+generically in the shared layout model, with dedicated runtime-tested examples
+on four targets (amd64, arm64, riscv64, loong64) today. Each architecture
+differs only in its move table. A typed vector helper, first-class vector
+*types*, and aggregate/array examples for ppc64le and s390x are the main
+remaining items.
 
 ## Links
 
