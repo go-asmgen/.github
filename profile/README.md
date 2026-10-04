@@ -41,7 +41,7 @@ target**.
 
 ## Status
 
-Released — `go get github.com/go-asmgen/asmgen@latest` (latest **v0.11.0**).
+Released — `go get github.com/go-asmgen/asmgen@latest` (latest **v0.13.0**).
 
 All six 64-bit targets, ABI0, at functional parity for scalars (signed/unsigned
 ints 1/2/4/8 bytes, pointers, 32/64-bit floats), stack frames + arbitrary TEXT
