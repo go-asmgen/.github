@@ -29,11 +29,16 @@ target**.
 
 - **Delegate encoding to `cmd/asm`.** Emitting text, not bytes, is what keeps
   adding an architecture cheap and keeps every instruction encoded by the same
-  toolchain that compiles the rest of the program. The exception is the few
-  instructions `cmd/asm` lacks — arm64 vector float64 arithmetic (`VFADD2D`…,
-  v0.10.0) and ppc64le VSX float64 arithmetic (`XVADDDP`…, v0.13.0) — which
-  go-asmgen emits as `WORD`s pinned against the system assembler (Apple `as`
-  for arm64, GNU as 2.44 for ppc64) and has run bit-identical on hardware.
+  toolchain that compiles the rest of the program. The exception is an instruction `cmd/asm` cannot assemble yet. Those are
+  the ppc64le VSX float64 arithmetic (`XVADDDP`…) and the loong64 vector
+  fused multiply-add (`VFMADDD`…). go-asmgen emits each one as a `WORD`
+  whose comment gives the spelling proposed for `cmd/asm`, and keeps its
+  encoding, references and proposed spelling in a registry
+  (`internal/gap`). From that registry come the Go patches in
+  [`goasm-patches/`](https://github.com/go-asmgen/asmgen/tree/main/goasm-patches),
+  and a weekly check that notices when Go catches up. Since v0.15.0 the
+  arm64 vector float64 arithmetic (`VFADD2D`…) and the loong64 broadcast
+  load are encoded by `cmd/asm`.
 - **Target ABI0, not ABIInternal.** ABI0 (stack-based, FP-relative) is the
   stable contract hand-written `.s` targets; ABIInternal can change between Go
   releases.
@@ -45,7 +50,7 @@ target**.
 
 ## Status
 
-Released — `go get github.com/go-asmgen/asmgen@latest` (latest **v0.13.0**).
+Released — `go get github.com/go-asmgen/asmgen@latest` (latest **v0.15.0**, which requires Go 1.27).
 
 All six 64-bit targets, ABI0, at functional parity for scalars (signed/unsigned
 ints 1/2/4/8 bytes, pointers, 32/64-bit floats), stack frames + arbitrary TEXT
