@@ -47,10 +47,13 @@ target**.
   test — natively on amd64 and arm64, under qemu-user for riscv64, loong64,
   ppc64le and s390x (the s390x job exercising the big-endian path).
 - **100% test coverage** of the library, enforced as a CI gate on every repository.
+- **Security policy.** The emitted assembly runs outside Go's memory safety, so
+  a wrong encoding is a vulnerability: [SECURITY.md](https://github.com/go-asmgen/asmgen/blob/main/SECURITY.md)
+  says what counts and how to report it privately. CI runs govulncheck.
 
 ## Status
 
-Released — `go get github.com/go-asmgen/asmgen@latest` (latest **v0.15.0**, which requires Go 1.27).
+Released — `go get github.com/go-asmgen/asmgen@latest` (latest **v0.15.1**, which requires Go 1.27).
 
 All six 64-bit targets, ABI0, at functional parity for scalars (signed/unsigned
 ints 1/2/4/8 bytes, pointers, 32/64-bit floats), stack frames + arbitrary TEXT
