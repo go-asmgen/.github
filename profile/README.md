@@ -29,7 +29,11 @@ target**.
 
 - **Delegate encoding to `cmd/asm`.** Emitting text, not bytes, is what keeps
   adding an architecture cheap and keeps every instruction encoded by the same
-  toolchain that compiles the rest of the program.
+  toolchain that compiles the rest of the program. The exception is the few
+  instructions `cmd/asm` lacks — arm64 vector float64 arithmetic (`VFADD2D`…,
+  v0.10.0) and ppc64le VSX float64 arithmetic (`XVADDDP`…, v0.13.0) — which
+  go-asmgen emits as `WORD`s pinned against the system assembler (Apple `as`
+  for arm64, GNU as 2.44 for ppc64) and has run bit-identical on hardware.
 - **Target ABI0, not ABIInternal.** ABI0 (stack-based, FP-relative) is the
   stable contract hand-written `.s` targets; ABIInternal can change between Go
   releases.
